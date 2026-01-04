@@ -1,17 +1,13 @@
-const CACHE_NAME = "yutai-cross-pwa-v1";
-const URLS = [
-  "./",
-  "app/static/manifest.json",
-  "app/static/icon-192.png",
-  "app/static/icon-512.png"
-];
-
+// 最小構成：まずは登録できることを優先（オフライン対応は後で強化）
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS)));
+  self.skipWaiting();
 });
 
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+// 何もキャッシュしない（= ループ要因を排除）
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((resp) => resp || fetch(event.request))
-  );
+  event.respondWith(fetch(event.request));
 });
