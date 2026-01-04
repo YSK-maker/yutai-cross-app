@@ -371,27 +371,25 @@ st.set_page_config(page_title=t("page_title"), layout="wide")
 
 # =========================
 # PWA（manifest読み込み / Service Worker登録）
-# ※ static配信を有効化し、static/ 配下に manifest.json と service-worker.js を置く前提
-#   - .streamlit/config.toml : [server]\nenableStaticServing = true
-#   - static/manifest.json
-#   - static/service-worker.js
-#   - static/icon-192.png / static/icon-512.png
+# 重要：/static/... に統一（/app/static は使わない）
 # =========================
 st.markdown(
     """
 <link rel="manifest" href="/static/manifest.json">
 <meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
+  // ぐるぐる回避：/static/ を明示して登録。scopeもルートに固定。
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/static/service-worker.js');
+      navigator.serviceWorker.register('/static/service-worker.js', { scope: '/' });
     });
   }
 </script>
     """,
     unsafe_allow_html=True,
 )
-
 
 init_state()
 ss = st.session_state
