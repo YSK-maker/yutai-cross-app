@@ -10,6 +10,8 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 
+st.sidebar.write("BUILD:", int(time.time()))
+
 # =========================
 # 設定
 # =========================
@@ -991,4 +993,5 @@ with tabs[1]:
         tooltip=["year:N", "month:O", alt.Tooltip("amount:Q", title="現渡金額", format=",.0f")],
     ).properties(height=340, title=f"2. yyyy-mmごとの現渡金額（年別）{amount_note}")
     st.altair_chart(cfg18(ch2), width="stretch")
+
 
